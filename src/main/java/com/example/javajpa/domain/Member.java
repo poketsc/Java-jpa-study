@@ -40,53 +40,9 @@ public class Member extends BaseEntity {
     @ToString.Exclude
     private List<UserHistory> userHistories = new ArrayList<>();
 
-//    @Column
-//    @CreatedDate
-//    private LocalDateTime createdAt;
-//
-//    @LastModifiedDate
-//    private LocalDateTime updatedAt;
-
-//    @OneToMany(fetch = FetchType.EAGER)
-//    private List<Address> address;
-
-    @Transient
-    private String testData;
-
-//    @PrePersist
-//    public void prePersist() {
-//        this.createdAt = LocalDateTime.now();
-//        this.updatedAt = LocalDateTime.now();
-//    }
-//
-//    @PostPersist
-//    public void postPersist() {
-//        System.out.println("postPersist");
-//    }
-//
-//    @PreUpdate
-//    public void preUpdate() {
-//        this.updatedAt = LocalDateTime.now();
-//    }
-//
-//    @PostUpdate
-//    public void postUpdate() {
-//        System.out.println("postUpdate");
-//    }
-//
-//    @PreRemove
-//    public void preRemove() {
-//        System.out.println("preRemove");
-//    }
-//
-//    @PostRemove
-//    public void postRemove() {
-//        System.out.println("postRemove");
-//    }
-//
-//    @PostLoad
-//    public void postLoad() {
-//        System.out.println("postLoad");
-//    }
+    @OneToMany
+    @JoinColumn(name = "member_id")
+    @ToString.Exclude
+    private List<Review> reviews = new ArrayList<>();
 
 }

@@ -26,8 +26,6 @@ public class UserHistory extends BaseEntity {
 
     private String email;
 
-    private Gender gender;
-
     @ManyToOne
     private Member member;
 }

@@ -6,23 +6,24 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
+
+
+// book 과 Author 가 ManyToMany 관계인데 ManyToMany 쓰지 않으려고 BookAndAuthor 엔티티를 만듦
 @Entity
 @NoArgsConstructor
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class Publisher extends BaseEntity {
+public class BookAndAuthor extends BaseEntity{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String name;
+    @ManyToOne
+    private Book book;
 
-    @OneToMany
-    @JoinColumn(name = "publisher_id")
-    private List<Book> books = new ArrayList<>();
+    @ManyToOne
+    private Author author;
 }

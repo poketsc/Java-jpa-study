@@ -1,5 +1,6 @@
 package com.example.javajpa.domain;
 
+import com.fasterxml.jackson.databind.ser.Serializers;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -14,7 +16,7 @@ import java.util.List;
 @Data
 @ToString(callSuper = true)
 @EqualsAndHashCode(callSuper = true)
-public class Publisher extends BaseEntity {
+public class Author extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +24,15 @@ public class Publisher extends BaseEntity {
 
     private String name;
 
+    private String country;
+
+//    @ManyToMany
     @OneToMany
-    @JoinColumn(name = "publisher_id")
-    private List<Book> books = new ArrayList<>();
+    @JoinColumn(name = "author_id")
+    @ToString.Exclude
+    private List<BookAndAuthor> bookAndAuthors = new ArrayList<>();
+
+    public void addBookAndAuthors(BookAndAuthor... bookAndAuthors) {
+        Collections.addAll(this.bookAndAuthors, bookAndAuthors);
+    }
 }
