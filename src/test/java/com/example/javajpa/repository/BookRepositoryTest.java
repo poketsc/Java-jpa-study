@@ -1,11 +1,13 @@
 package com.example.javajpa.repository;
 
 import com.example.javajpa.domain.*;
+import com.example.javajpa.repository.dto.BookStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @SpringBootTest
@@ -94,6 +96,33 @@ public class BookRepositoryTest {
         System.out.println(publisherRepository.findAll());
     }
 
+    @Test
+    void queryTest() {
+        System.out.println(bookRepository.findByCategoryIsNullAndNameEqualsAndCreatedAtGreaterThanEqualAndUpdatedAtGreaterThanEqual(
+                "abc",
+                LocalDateTime.now().minusDays(1L),
+                LocalDateTime.now().minusDays(1L)
+        ));
+    }
+
+    @Test
+    void nativeQueryTest() {
+        bookRepository.findAll().forEach(System.out::println);
+        bookRepository.findAllCustom().forEach(System.out::println);
+
+        List<Book> books = bookRepository.findAll();
+
+        for (Book book : books) {
+            book.setCategory("abc");
+        }
+
+        bookRepository.saveAll(books);
+
+        System.out.println(bookRepository.findAll());
+
+        System.out.println(bookRepository.updateCategories());
+    }
+
     private void givenBookAndReview() {
         givenReview(givenMember(), givenBook(givenPublisher()));
     }
@@ -130,5 +159,18 @@ public class BookRepositoryTest {
         review.setBook(book);
 
         reviewRepository.save(review);
+    }
+
+    @Test
+    void converterTest() {
+        bookRepository.findAll().forEach(System.out::println);
+
+        Book book = new Book();
+        book.setName("abc");
+        book.setStatus(new BookStatus(200));
+
+        bookRepository.save(book);
+
+        System.out.println(bookRepository.findRawRecord().values());
     }
 }
