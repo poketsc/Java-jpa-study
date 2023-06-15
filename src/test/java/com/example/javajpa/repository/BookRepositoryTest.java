@@ -45,6 +45,55 @@ public class BookRepositoryTest {
 //        System.out.println(member.getReviews().get(0).getBook().getPublisher());
     }
 
+    @Test
+    void bookCascadeTest() {
+        Book book = new Book();
+        book.setName("abc");
+
+//        bookRepository.save(book);
+
+        Publisher publisher = new Publisher();
+        publisher.setName("회사");
+
+//        publisherRepository.save(publisher);
+
+        book.setPublisher(publisher);
+        bookRepository.save(book);
+
+//        똑같지만 가독성을 위해서 getBooks().add(book)은 하지 않는다.
+//        publisher.getBooks().add(book);
+//        publisher.addBook(book);
+//        publisherRepository.save(publisher);
+
+        System.out.println(bookRepository.findAll());
+        System.out.println(publisherRepository.findAll());
+
+        Book book1 = bookRepository.findById(1L).get();
+        book1.getPublisher().setName("회사2");
+
+        bookRepository.save(book1);
+
+        System.out.println(publisherRepository.findAll());
+
+        Book book2 = bookRepository.findById(1L).get();
+//        bookRepository.delete(book2);
+
+        Book book3 = bookRepository.findById(1L).get();
+        book3.setPublisher(null);
+
+        bookRepository.save(book3);
+
+        System.out.println(bookRepository.findAll());
+        System.out.println(publisherRepository.findAll());
+        System.out.println(bookRepository.findById(1L).get().getPublisher());
+    }
+
+    @Test
+    void bookRemoveCascadeTest() {
+        System.out.println(bookRepository.findAll());
+        System.out.println(publisherRepository.findAll());
+    }
+
     private void givenBookAndReview() {
         givenReview(givenMember(), givenBook(givenPublisher()));
     }
