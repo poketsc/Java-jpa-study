@@ -18,6 +18,9 @@ import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
 @SpringBootTest
 @Transactional
 class MemberRepositoryTest {
@@ -217,9 +220,14 @@ class MemberRepositoryTest {
         userRepository.save(member2);
 //        findAll() 로 찾을떄와 findAllRawRecord() 처럼 raw query를 날릴때 print 해보면 Address 객체에 대한 정보가 다른 모습으로 출력이 되는데 이유는 영속성 컨텍스트 때문이다.
 //        entityManager.clear() 를 하면 똑같이 나온다.
-        entityManager.clear();
+//        entityManager.clear();
         userRepository.findAll().forEach(System.out::println);
 
         userRepository.findAllRawRecord().forEach(a->System.out.println(a.values()));
+
+        assertAll(
+                () -> assertThat(userRepository.findById(2L).get().getHomeAddress()).isNull(),
+                () -> assertThat(userRepository.findById(3L).get().getHomeAddress()).isInstanceOf(Address.class)
+        );
     }
 }
