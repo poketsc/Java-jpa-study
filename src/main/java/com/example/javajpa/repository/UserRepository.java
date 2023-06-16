@@ -63,4 +63,6 @@ public interface UserRepository extends JpaRepository<Member, Long> {
     @Query(value="select * from member limit 1;", nativeQuery = true)
     Map<String, Object> findRawRecord();
 
+    @Query(value ="select * from member", nativeQuery = true)
+    List<Map<String, Object>> findAllRawRecord();
 }

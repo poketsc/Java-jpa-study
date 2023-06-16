@@ -1,5 +1,6 @@
 package com.example.javajpa.repository;
 
+import com.example.javajpa.domain.Address;
 import com.example.javajpa.domain.Gender;
 import com.example.javajpa.domain.Member;
 import com.example.javajpa.domain.UserHistory;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -23,6 +25,8 @@ class MemberRepositoryTest {
     private UserRepository userRepository;
     @Autowired
     private UserHistoryRepository userHistoryRepository;
+    @Autowired
+    private EntityManager entityManager;
 
     @Test
     void crud() {
@@ -185,5 +189,37 @@ class MemberRepositoryTest {
 
         System.out.println(userHistoryRepository.findAll().get(0).getMember());
 
+    }
+
+    @Test
+    void embedTest() {
+        userRepository.findAll().forEach(System.out::println);
+
+        Member member = new Member();
+        member.setName("abc");
+        member.setHomeAddress(new Address("서울시", "강남구", "강남대로", "12345"));
+        member.setCompanyAddress(new Address("서울시", "성동구", "강남대로", "23456"));
+
+        userRepository.save(member);
+
+        Member member1 = new Member();
+        member1.setName("abc2");
+        member1.setHomeAddress(null);
+        member1.setCompanyAddress(null);
+
+        userRepository.save(member1);
+
+        Member member2 = new Member();
+        member2.setName("abc3");
+        member2.setHomeAddress(new Address());
+        member2.setCompanyAddress(new Address());
+
+        userRepository.save(member2);
+//        findAll() 로 찾을떄와 findAllRawRecord() 처럼 raw query를 날릴때 print 해보면 Address 객체에 대한 정보가 다른 모습으로 출력이 되는데 이유는 영속성 컨텍스트 때문이다.
+//        entityManager.clear() 를 하면 똑같이 나온다.
+        entityManager.clear();
+        userRepository.findAll().forEach(System.out::println);
+
+        userRepository.findAllRawRecord().forEach(a->System.out.println(a.values()));
     }
 }
